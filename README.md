@@ -1,0 +1,1 @@
+Shopping cart app with plain js and some bootstrap styling
