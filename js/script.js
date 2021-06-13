@@ -11,19 +11,44 @@ document.addEventListener("DOMContentLoaded", getProducts);
 function addProduct(e) {
     if (e.target.classList.contains("add-to-cart")) {
         const tableRow = document.createElement("tr");
+        const products = getProductsFromLocalStorage();
+        let productFound;
 
-        tableRow.innerHTML = `
-        <td>${e.target.previousElementSibling.previousElementSibling.textContent.trim()}</td>
-        <td>${e.target.previousElementSibling.textContent.trim()}</td>
-        <button type="button" class="btn btn-light">Remove</button>`;
-        cartList.appendChild(tableRow);
+        products.forEach(product => {
+            if (product[0] === e.target.previousElementSibling.previousElementSibling.textContent.trim()) {
+                productFound = true;
+            }
+        });
 
-        const data = [
-            e.target.previousElementSibling.previousElementSibling.textContent.trim(),
-            e.target.previousElementSibling.textContent.trim()
-        ];
+        if (productFound) {
+            const container = document.querySelector(".container");
+            const h3 = document.querySelector("h3");
+            const div = document.createElement("div");
 
-        storeProductInlacalStorage(data);
+            div.className = "alert alert-danger mt-3";
+            div.setAttribute("role", "alert");
+            div.textContent = "Product already Added!";
+            container.insertBefore(div, h3);
+
+            const currentAlert = document.querySelector(".alert");
+
+            setTimeout(() => {
+                currentAlert.remove();
+            }, 3000);
+        } else {
+            tableRow.innerHTML = `
+            <td>${e.target.previousElementSibling.previousElementSibling.textContent.trim()}</td>
+            <td>${e.target.previousElementSibling.textContent.trim()}</td>
+            <button type="button" class="btn btn-light">Remove</button>`;
+            cartList.appendChild(tableRow);
+
+            const data = [
+                e.target.previousElementSibling.previousElementSibling.textContent.trim(),
+                e.target.previousElementSibling.textContent.trim()
+            ];
+
+            storeProductInlacalStorage(data);
+        }
     }
 
     e.preventDefault();
